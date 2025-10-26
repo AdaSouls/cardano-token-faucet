@@ -9,7 +9,7 @@ const router = express.Router();
 // Request tokens endpoint - rate limiting DISABLED for testing
 router.post(
   "/request",
-  // faucetRequestLimiter, // Commented out for testing
+  faucetRequestLimiter,
   validate(faucetValidation.requestTokens),
   faucetController.requestTokens
 );
