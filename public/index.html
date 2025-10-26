@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALDEA Faucet</title>
+    <title>Preprod $ALDEA Faucet</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1>🌊 ALDEA Faucet</h1>
-                <p class="subtitle">Connect your wallet to receive ALDEA tokens</p>
+                <h1>🌊 Preprod $ALDEA Faucet</h1>
             </div>
 
             <div class="content">
                 <!-- Step 1: Connect Wallet -->
                 <div class="step" id="step1">
                     <h2>Step 1: Connect Your Cardano Wallet</h2>
-                    <p class="description">Connect your Cardano wallet to get started</p>
-                    
+                    <br>
                     <div class="wallet-grid">
                         <button class="wallet-btn" data-wallet="nami">
                             <span class="wallet-icon">🦊</span>
@@ -29,24 +29,20 @@
                             <span class="wallet-icon">♾️</span>
                             <span class="wallet-name">Eternl</span>
                         </button>
-                        <button class="wallet-btn" data-wallet="flint">
-                            <span class="wallet-icon">🔥</span>
-                            <span class="wallet-name">Flint</span>
-                        </button>
                         <button class="wallet-btn" data-wallet="typhon">
                             <span class="wallet-icon">🌪️</span>
                             <span class="wallet-name">Typhon</span>
                         </button>
                     </div>
-                    
+
                     <div id="errorMessage" class="error-message" style="display: none;"></div>
                 </div>
 
                 <!-- Step 2: Request Tokens -->
                 <div class="step" id="step2" style="display: none;">
-                    <h2>Step 2: Request ALDEA Tokens</h2>
-                    <p class="description">Send ADA to receive ALDEA tokens</p>
-                    
+                    <h2>Step 2: Request Preprod $ALDEA Tokens</h2>
+                    <p class="description">Send ADA to receive Preprod $ALDEA tokens</p>
+
                     <div class="info-box">
                         <div class="info-item">
                             <span class="label">Connected Wallet:</span>
@@ -55,13 +51,13 @@
                                 <span id="walletBadge" class="badge"></span>
                             </div>
                         </div>
-                        
+
                         <div class="info-grid">
                             <div class="info-item">
                                 <span class="label">You Send:</span>
                                 <span id="minAda" class="value highlight">2 ADA</span>
                             </div>
-                            
+
                             <div class="info-item">
                                 <span class="label">You Receive:</span>
                                 <span id="aldeaAmount" class="value highlight">250 ALDEA</span>
@@ -70,11 +66,13 @@
                     </div>
 
                     <div class="alert alert-info">
-                        <strong>ℹ️ How it works:</strong> Click "Request Tokens" to create a transaction sending 2 ADA to the faucet. Once confirmed, you'll automatically receive 250 ALDEA tokens to your wallet.
+                        <strong>ℹ️ How it works:</strong> Click "Request Tokens" to create a transaction sending 2 ADA
+                        to the faucet. Once confirmed, you'll automatically receive 250 ALDEA tokens to your wallet.
                     </div>
 
-                    <div class="alert alert-warning">
-                        <strong>🔒 Rate Limit:</strong> You can only request tokens once every 12 hours from the same IP address.
+                    <div id="rateLimitWarning" class="alert alert-warning" style="display: none;">
+                        <strong>🔒 Rate Limit:</strong> You can only request tokens once every 12 hours from the same IP
+                        address.
                     </div>
 
                     <div class="button-group">
@@ -86,21 +84,24 @@
                 <!-- Step 3: Transaction Submitted -->
                 <div class="step" id="step3" style="display: none;">
                     <div class="success-icon">✅</div>
-                    <h2>Transaction Submitted!</h2>
+                    <h2 style="text-align: center;">Transaction Submitted</h2>
                     <p class="description">Your transaction has been successfully submitted to the blockchain</p>
-                    
+
                     <div class="info-box">
                         <div class="info-item">
                             <span class="label">Transaction Hash:</span>
                             <div class="address-container">
-                                <code id="txHash" class="address tx-hash"></code>
+                                <a id="txHashLink" href="#" target="_blank" rel="noopener noreferrer" class="address-link">
+                                    <code id="txHash" class="address tx-hash"></code>
+                                </a>
                                 <button id="copyTxBtn" class="btn-icon" title="Copy transaction hash">📋</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="alert alert-success">
-                        <strong>⏱️ Please wait:</strong> Your ALDEA tokens will be sent automatically once your transaction is confirmed on the blockchain. This can take up to 15 minutes.
+                        <strong>⏱️ Please wait:</strong> Your ALDEA tokens will be sent automatically once your
+                        transaction is confirmed on the blockchain. This can take up to 15 minutes.
                     </div>
 
                     <div class="button-group">
@@ -123,4 +124,5 @@
 
     <script src="script.js" defer></script>
 </body>
+
 </html>

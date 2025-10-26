@@ -264,6 +264,25 @@ body {
     word-break: break-all;
     flex: 1;
     border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.address-link {
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+    display: flex;
+}
+
+.address-link:hover .address {
+    background: #f0f0f0;
+    border-color: #667eea;
+}
+
+.address-link .address {
+    color: #667eea;
+    cursor: pointer;
+    width: 100%;
 }
 
 .value {
@@ -289,6 +308,15 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 15px;
     margin-top: 15px;
+    justify-items: center;
+}
+
+.info-grid .info-item {
+    text-align: center;
+}
+
+.info-grid .label {
+    text-align: center;
 }
 
 .alert {

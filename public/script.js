@@ -35,9 +35,11 @@ const connectedAddressEl = document.getElementById('connectedAddress');
 const walletBadgeEl = document.getElementById('walletBadge');
 const requestBtn = document.getElementById('requestBtn');
 const disconnectBtn = document.getElementById('disconnectBtn');
+const rateLimitWarning = document.getElementById('rateLimitWarning');
 
 // Step 3 elements
 const txHashEl = document.getElementById('txHash');
+const txHashLink = document.getElementById('txHashLink');
 const copyTxBtn = document.getElementById('copyTxBtn');
 const resetBtn = document.getElementById('resetBtn');
 
@@ -67,7 +69,11 @@ walletButtons.forEach(btn => {
 requestBtn.addEventListener('click', handleRequestTokens);
 disconnectBtn.addEventListener('click', handleDisconnect);
 resetBtn.addEventListener('click', handleReset);
-copyTxBtn.addEventListener('click', () => copyToClipboard(txHashEl.textContent, copyTxBtn));
+copyTxBtn.addEventListener('click', () => {
+    // Copy full hash from data attribute, not the abbreviated text
+    const fullHash = txHashEl.getAttribute('data-full-hash') || txHashEl.textContent;
+    copyToClipboard(fullHash, copyTxBtn);
+});
 
 // Show/hide functions
 function showError(message) {
@@ -191,7 +197,7 @@ async function connectWallet(walletName) {
     }
 }
 
-// Handle request tokens - build and submit transaction
+// Handle request tokens - check eligibility first, then build transaction
 async function handleRequestTokens() {
     if (!lucid || !faucetInfo) {
         showError('Wallet not connected or faucet info not loaded');
@@ -199,11 +205,12 @@ async function handleRequestTokens() {
     }
     
     hideError();
+    rateLimitWarning.style.display = 'none'; // Hide rate limit warning initially
     showLoading('Checking eligibility...');
     requestBtn.disabled = true;
     
     try {
-        // Check rate limit first
+        // STEP 1: Check rate limit and eligibility FIRST (before building transaction)
         const checkResponse = await fetch(`${API_BASE_URL}/api/v1/faucet/request`, {
             method: 'POST',
             headers: {
@@ -214,18 +221,29 @@ async function handleRequestTokens() {
         
         if (!checkResponse.ok) {
             const errorData = await checkResponse.json();
-            throw new Error(errorData.message || 'Rate limit check failed');
+            
+            // If rate limited, show the warning and stop here
+            if (checkResponse.status === 429 || errorData.message?.includes('Rate limit') || errorData.message?.includes('Too many requests')) {
+                rateLimitWarning.style.display = 'block';
+                showStep(2);
+                requestBtn.disabled = false;
+                showError('⏱️ Rate limit exceeded. You can only request tokens once every 12 hours.');
+                return;
+            }
+            
+            throw new Error(errorData.message || 'Eligibility check failed');
         }
         
         const faucetData = await checkResponse.json();
         const faucetAddress = faucetData.faucetAddress;
         const amountLovelace = BigInt(faucetData.minimumAdaRequired * 1000000 || 2000000);
         
+        console.log('✅ Eligibility confirmed');
         console.log('Building transaction to send', amountLovelace.toString(), 'lovelace to', faucetAddress);
         
+        // STEP 2: Build transaction (only if eligibility passed)
         showLoading('Building transaction...');
         
-        // Build transaction using Lucid
         const tx = await lucid
             .newTx()
             .payToAddress(faucetAddress, { lovelace: amountLovelace })
@@ -236,20 +254,33 @@ async function handleRequestTokens() {
         
         showLoading('Please sign the transaction in your wallet...');
         
-        // Sign the transaction (opens wallet popup)
+        // STEP 3: Sign the transaction (opens wallet popup)
         const signedTx = await tx.sign().complete();
         
         console.log('Transaction signed');
         
         showLoading('Submitting transaction...');
         
-        // Submit the signed transaction
+        // STEP 4: Submit the signed transaction
         const txHash = await signedTx.submit();
         
         console.log('✅ Transaction submitted:', txHash);
         
         // Show success page with tx hash
-        txHashEl.textContent = txHash;
+        // Store full hash in data attribute for copying
+        txHashEl.setAttribute('data-full-hash', txHash);
+        // Display abbreviated version (first 12 chars + ... + last 12 chars)
+        const abbreviatedHash = txHash.length > 30 
+            ? `${txHash.slice(0, 12)}...${txHash.slice(-12)}`
+            : txHash;
+        txHashEl.textContent = abbreviatedHash;
+        
+        // Set CardanoScan link based on network
+        const explorerUrl = faucetInfo.blockfrost.network === 'mainnet'
+            ? `https://cardanoscan.io/transaction/${txHash}`
+            : `https://preprod.cardanoscan.io/transaction/${txHash}`;
+        txHashLink.href = explorerUrl;
+        
         showStep(3);
         
     } catch (error) {
@@ -260,9 +291,7 @@ async function handleRequestTokens() {
         // Handle specific error types
         let errorMessage = error.message || 'Transaction failed';
         
-        if (errorMessage.includes('Too many requests') || errorMessage.includes('Rate limit')) {
-            errorMessage = '⏱️ Rate limit exceeded. You can only request tokens once every 12 hours.';
-        } else if (errorMessage.toLowerCase().includes('cancel') || errorMessage.toLowerCase().includes('reject') || errorMessage.toLowerCase().includes('decline')) {
+        if (errorMessage.toLowerCase().includes('cancel') || errorMessage.toLowerCase().includes('reject') || errorMessage.toLowerCase().includes('decline')) {
             errorMessage = 'Transaction cancelled by user.';
         } else if (errorMessage.toLowerCase().includes('insufficient') || errorMessage.toLowerCase().includes('not enough')) {
             errorMessage = 'Insufficient funds. You need at least 3 ADA (2 ADA + fees).';
