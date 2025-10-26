@@ -69,6 +69,20 @@ cp .env.example .env
    - **Filter**: Your faucet wallet address
    - **Auth Header**: `Bearer YOUR_WEBHOOK_AUTH_TOKEN`
 
+## Deployment
+
+### Railway (Recommended)
+
+For production deployment, we recommend **Railway.app** which handles Express apps perfectly.
+
+📖 **See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete Railway deployment guide.**
+
+Quick start:
+1. Push your code to GitHub
+2. Create a Railway project from your repo
+3. Add environment variables
+4. Railway auto-deploys! 🚀
+
 ## Usage
 
 ### Development Mode
@@ -85,7 +99,7 @@ npm start
 
 Once the server is running, the frontend will be available at:
 - **Local**: `http://localhost:4000`
-- **Production**: Your deployed domain
+- **Production**: Your deployed domain (e.g., Railway URL)
 
 ## Frontend
 

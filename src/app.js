@@ -66,6 +66,11 @@ app.use(
         return callback(null, true);
       }
       
+      // Allow Railway and custom domains
+      if (origin.includes('railway.app') || origin.includes('aldea.world')) {
+        return callback(null, true);
+      }
+      
       callback(new Error("Not allowed by CORS"));
     },
   })
@@ -91,7 +96,8 @@ app.use((req, res, next) => {
   if (req.path.startsWith("/api")) {
     next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
   } else {
-    next();
+    // Serve index.html for any non-API routes (SPA fallback)
+    res.sendFile(path.join(__dirname, "../public/index.html"));
   }
 });
 

@@ -4,7 +4,8 @@
   "description": "ALDEA Faucet Server with Blockfrost webhook integration",
   "main": "src/index.js",
   "scripts": {
-    "start": "pm2 start ecosystem.config.json --no-daemon",
+    "start": "node src/index.js",
+    "start:pm2": "pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=local nodemon src/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
