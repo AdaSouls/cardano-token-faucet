@@ -14,8 +14,9 @@
   },
   "dependencies": {
     "@blockfrost/blockfrost-js": "^6.0.0",
+    "@isaacs/brace-expansion": "^5.0.1",
     "@meshsdk/core": "^1.9.0-beta.1",
-    "axios": "^1.4.0",
+    "axios": "^1.13.5",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "cross-env": "^7.0.0",
@@ -27,6 +28,7 @@
     "joi": "^17.3.0",
     "morgan": "^1.9.1",
     "pm2": "^5.1.0",
+    "systeminformation": "^5.27.14",
     "winston": "^3.2.1",
     "xss-clean": "^0.1.1"
   },
