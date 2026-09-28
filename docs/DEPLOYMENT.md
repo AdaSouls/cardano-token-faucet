@@ -12,7 +12,7 @@
 2. Click **"New Project"**
 3. Select **"Deploy from GitHub repo"**
 4. Authorize Railway to access your GitHub
-5. Select the `aldea-faucet` repository
+5. Select the `cardano-token-faucet` repository
 
 ### 2. Configure Environment Variables
 
