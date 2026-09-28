@@ -25,7 +25,8 @@ A Cardano-based faucet server that automatically sends ALDEA tokens to users who
 
 1. Clone the repository:
 ```bash
-cd /Users/matifalcone/Projects/aldea-faucet
+git clone https://github.com/AdaSouls/cardano-token-faucet.git
+cd cardano-token-faucet
 ```
 
 2. Install dependencies:
@@ -203,7 +204,7 @@ Logs are written to:
 ## Project Structure
 
 ```
-aldea-faucet/
+cardano-token-faucet/
 ├── src/
 │   ├── config/           # Configuration files
 │   ├── controller/       # Request handlers
